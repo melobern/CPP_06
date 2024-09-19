@@ -29,23 +29,30 @@ ScalarConverter::~ScalarConverter() {
     return;
 }
 
-void	ScalarConverter::convert( std::string const& literal ) {
+void	ScalarConverter::convert( std::string const& str ) {
 	ScalarConverter 		tmp;
 	ScalarConverter::Scalar scalar;
 
-	scalar.type = tmp.identifyType(literal, scalar);
-	tmp.convertToInt(scalar);
-	tmp.convertToChar(scalar);
-	tmp.convertToFloat(scalar);
-	tmp.convertToDouble(scalar);
+	scalar.type = tmp.identifyType(str, scalar);
+	scalar.intPossible = tmp.convertToInt(str);
+    scalar.charPossible = tmp.convertToChar(str);
+    scalar.floatPossible = tmp.convertToFloat(str);
+    scalar.doublePossible = tmp.convertToDouble(str);
 	std::cout << scalar << std::endl;
 }
 
-
-std::ostream &operator<<(std::ostream &out, ScalarConverter const &src) {
-    out << "My name is " << BRIGHT_YELLOW << src.getName() << RESET;
-    out << ", I'm a src of grade ";
-    out << YELLOW << src.getGrade() << RESET << " !";
-    out << std::endl;
-    return (out);
+int		ScalarConverter::convertToInt(std::string const &str) {
+    if (scalar.type == ScalarConverter::inputType::INT) {
+        scalar.intVal = std::stoi(scalar.str);
+        return (1);
+    }
+    return (0);
 }
+
+std::ostream &operator<<(std::ostream &os, ScalarConverter::Scalar const &sc) {
+    os << "char:" << sc.charVal << std::endl;
+    os << "int:" << sc.intVal << std::endl;
+    os << "float:" << sc.floatVal << "f" << std::endl;
+    os << "double:" << sc.doubleVal << std::endl;
+    return (os);
+} 

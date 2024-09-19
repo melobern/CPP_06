@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 #include "../includes/ScalarConverter.hpp"
+#include "../includes/Colors.hpp"
 
 static void check_args(int ac, char **av) {
   if (ac == 1) {
