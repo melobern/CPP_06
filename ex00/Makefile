@@ -17,8 +17,8 @@ MKDIR = mkdir -p
 RMDIR = rm -rf
 
 # ---------------------------------- Sources --------------------------------- #
-HEADER = ScalarConverter
-SRCS = main ScalarConverter 
+HEADER = Colors ScalarConverter
+SRCS = main ScalarConverter
 
 # ---------------------------------- Repertories ----------------------------- #
 HEADERS_DIR = includes/
