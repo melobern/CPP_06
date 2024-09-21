@@ -29,6 +29,18 @@ ScalarConverter::~ScalarConverter() {
     return;
 }
 
+ScalarConverter::Scalar::Scalar(void) {
+    this->type = INVALID;
+    this->intVal = 0;
+    this->floatVal = 0;
+    this->charVal = 0;
+    this->doubleVal = 0;
+    this->charPossible = false;
+    this->charDisplayable = false;
+    this->intPossible = false;
+    this->floatPrecision = 1;
+}
+
 void	ScalarConverter::convert( std::string const& str ) {
     ScalarConverter 		tmp;
     ScalarConverter::Scalar scalar;
@@ -44,21 +56,24 @@ void	ScalarConverter::convert( std::string const& str ) {
 }
 
 ScalarConverter::inputType ScalarConverter::identifyType(std::string const &str, ScalarConverter::Scalar &scalar) {
-    if (ScalarConverter::isChar(str))
+    if (ScalarConverter::isChar(str, scalar))
         return (CHAR);
-    if (ScalarConverter::isInt(str))
+    if (ScalarConverter::isInt(str, scalar))
         return (INT);
-    if (ScalarConverter::isFloat(str))
+    if (ScalarConverter::isFloat(str, scalar))
         return (FLOAT);
-    if (ScalarConverter::isDouble(str))
+    if (ScalarConverter::isDouble(str, scalar))
         return (DOUBLE);
     return (INVALID);
 }
 
 bool    ScalarConverter::isChar(std::string const &str, Scalar &scalar) {
-    if (str.length() == 1 && std::isprint(str[0] && !std::isdigit(str[0])))
+    if (str.length() == 1 && std::isprint(str[0]) && !std::isdigit(str[0])) {
+        scalar.charVal = str[0];
+        scalar.charPossible = true;
+        scalar.charDisplayable = true;
         return (true);
-    scalar.charVal = str[0];
+    }
     return (false);
 }
 
@@ -69,6 +84,7 @@ bool    ScalarConverter::isInt(std::string const &str, Scalar &scalar) {
     if (*end != '\0' || errno == ERANGE || num > INT_MAX || num < INT_MIN)
         return (false);
     scalar.intVal = static_cast<int>(num);
+    scalar.intPossible = true;
     return (true);
 }
 
@@ -84,11 +100,11 @@ bool    ScalarConverter::isFloat(std::string const &str, Scalar &scalar) {
 }
 
 void		ScalarConverter::convertToInt(std::string const &str, Scalar &scalar) {
+    if (scalar.type == INT)
+        return;
     switch (scalar.type) {
         case CHAR:
             scalar.intVal = static_cast<int>(scalar.charVal);
-            break;
-        case INT:
             break;
         case FLOAT:
             scalar.intVal = static_cast<int>(scalar.floatVal);
@@ -96,9 +112,28 @@ void		ScalarConverter::convertToInt(std::string const &str, Scalar &scalar) {
         case DOUBLE:
             scalar.intVal = static_cast<int>(scalar.doubleVal);
             break;
-        default:
+    }
+}
+
+void    ScalarConverter::convertToChar(std::string const &str, Scalar &scalar) {
+    if (scalar.type == CHAR)
+        return;
+    if (!scalar.intPossible || scalar.intVal < CHAR_MIN || scalar.intVal > CHAR_MAX) {
+        scalar.charPossible = false;
+        return;
+    }
+    switch (scalar.type) {
+        case INT:
+            scalar.charVal = static_cast<char>(scalar.intVal);
+            break;
+        case FLOAT:
+            scalar.charVal = static_cast<char>(scalar.floatVal);
+            break;
+        case DOUBLE:
+            scalar.charVal = static_cast<char>(scalar.doubleVal);
             break;
     }
+    scalar.charDisplayable = std::isprint(scalar.charVal);
 }
 
 void		ScalarConverter::convertToDouble(std::string const &str, Scalar &scalar) {
@@ -117,6 +152,7 @@ void		ScalarConverter::convertToDouble(std::string const &str, Scalar &scalar) {
 
     }
 }
+
 std::ostream &operator<<(std::ostream &os, ScalarConverter::Scalar const &sc) {
     if (sc.type == ScalarConverter::INVALID) {
         os << RED << "Invalid input" << RESET << std::endl;
@@ -134,7 +170,7 @@ std::ostream &operator<<(std::ostream &os, ScalarConverter::Scalar const &sc) {
     os << "float: " << sc.floatVal << "f" << std::endl;
     os << "double: " << sc.doubleVal << std::endl;
     return (os);
-} 
+}
 /*Handling conversions between different scalar types in C++ can be tricky due to potential issues like data loss, overflow, and type safety. Here are some best practices to follow:
 
 1. **Use Explicit Conversions**: Avoid implicit conversions that can lead to unexpected results. Use explicit casting to make conversions clear and intentional.
