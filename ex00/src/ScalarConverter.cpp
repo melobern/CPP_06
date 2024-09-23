@@ -136,6 +136,7 @@ void    ScalarConverter::convertToChar(Scalar &scalar) {
         scalar.charPossible = false;
         return;
     }
+    scalar.charPossible = true;
     switch (scalar.type) {
         case INT:
             scalar.charVal = static_cast<char>(scalar.intVal);
