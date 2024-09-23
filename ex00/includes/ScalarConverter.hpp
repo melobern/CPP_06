@@ -59,10 +59,10 @@ class ScalarConverter {
   ScalarConverter(const ScalarConverter &src);
   ScalarConverter &operator=(const ScalarConverter &src);
   ~ScalarConverter(void);
-  void        convertToInt(std::string const &str, Scalar &scalar);
-  void        convertToFloat(std::string const &str, Scalar &scalar);
-  void        convertToChar(std::string const &str, Scalar &scalar);
-  void        convertToDouble(std::string const &str, Scalar &scalar);
+  void        convertToInt(Scalar &scalar);
+  void        convertToFloat(Scalar &scalar);
+  void        convertToChar(Scalar &scalar);
+  void        convertToDouble(Scalar &scalar);
 
   inputType   identifyType(std::string const &str, Scalar &scalar);
   bool        isChar(std::string const &str, Scalar &scalar);
