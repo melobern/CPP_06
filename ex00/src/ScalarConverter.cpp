@@ -47,10 +47,10 @@ void	ScalarConverter::convert( std::string const& str ) {
 
     scalar.type = tmp.identifyType(str, scalar);
     if (scalar.type != ScalarConverter::INVALID) {
-        tmp.convertToInt(str, scalar);
-        tmp.convertToChar(str, scalar);
-        tmp.convertToFloat(str, scalar);
-        tmp.convertToDouble(str, scalar);
+        tmp.convertToInt(scalar);
+        tmp.convertToChar(scalar);
+        tmp.convertToFloat(scalar);
+        tmp.convertToDouble(scalar);
     }
 	std::cout << scalar << std::endl;
 }
@@ -99,7 +99,19 @@ bool    ScalarConverter::isFloat(std::string const &str, Scalar &scalar) {
     return (true);
 }
 
-void		ScalarConverter::convertToInt(std::string const &str, Scalar &scalar) {
+bool    ScalarConverter::isDouble(std::string const &str, Scalar &scalar) {
+    errno = 0;
+    char *end;
+    double num = std::strtod(str.c_str(), &end);
+    if (*end != '\0' || errno == ERANGE
+        || num > std::numeric_limits<double>::max()
+        || num < -std::numeric_limits<double>::max())
+        return (false);
+    scalar.doubleVal = num;
+    return (true);
+}
+
+void		ScalarConverter::convertToInt(Scalar &scalar) {
     if (scalar.type == INT)
         return;
     switch (scalar.type) {
@@ -112,10 +124,12 @@ void		ScalarConverter::convertToInt(std::string const &str, Scalar &scalar) {
         case DOUBLE:
             scalar.intVal = static_cast<int>(scalar.doubleVal);
             break;
+        default:
+            break;
     }
 }
 
-void    ScalarConverter::convertToChar(std::string const &str, Scalar &scalar) {
+void    ScalarConverter::convertToChar(Scalar &scalar) {
     if (scalar.type == CHAR)
         return;
     if (!scalar.intPossible || scalar.intVal < CHAR_MIN || scalar.intVal > CHAR_MAX) {
@@ -132,11 +146,31 @@ void    ScalarConverter::convertToChar(std::string const &str, Scalar &scalar) {
         case DOUBLE:
             scalar.charVal = static_cast<char>(scalar.doubleVal);
             break;
+        default:
+            break;
     }
     scalar.charDisplayable = std::isprint(scalar.charVal);
 }
 
-void		ScalarConverter::convertToDouble(std::string const &str, Scalar &scalar) {
+void ScalarConverter::convertToFloat(Scalar &scalar) {
+    if (scalar.type == FLOAT)
+        return;
+    switch (scalar.type) {
+        case CHAR:
+            scalar.floatVal = static_cast<float>(scalar.charVal);
+            break;
+        case INT:
+            scalar.floatVal = static_cast<float>(scalar.intVal);
+            break;
+        case DOUBLE:
+            scalar.floatVal = static_cast<float>(scalar.doubleVal);
+            break;
+        default:
+            break;
+    }
+}
+
+void		ScalarConverter::convertToDouble(Scalar &scalar) {
     switch (scalar.type) {
         case CHAR:
             scalar.doubleVal = static_cast<double>(scalar.charVal);
@@ -149,7 +183,8 @@ void		ScalarConverter::convertToDouble(std::string const &str, Scalar &scalar) {
             break;
         case DOUBLE:
             break;
-
+        default:
+            break;
     }
 }
 
@@ -165,8 +200,11 @@ std::ostream &operator<<(std::ostream &os, ScalarConverter::Scalar const &sc) {
     } else {
         os << "char: '" << sc.charVal << "'" << std::endl;
     }
-    os << "char: " << sc.charVal << std::endl;
-    os << "int: " << sc.intVal << std::endl;
+    if (!sc.intPossible) {
+        os << "int: impossible" << std::endl;
+    } else {
+        os << "int: " << sc.intVal << std::endl;
+    }
     os << "float: " << sc.floatVal << "f" << std::endl;
     os << "double: " << sc.doubleVal << std::endl;
     return (os);
