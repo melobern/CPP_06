@@ -16,7 +16,8 @@
 
 static void check_args(int ac) {
   if (ac == 1) {
-    std::cout << RED << "Error : should have one argument at least." << RESET;
+    std::cout << RED << "Error : should have, at least, one argument." << RESET;
+    std::cout << std::endl;
     std::cout << "Correct usage : ./convert [number]";
     std::cout << std::endl;
     exit(1);
