@@ -11,21 +11,15 @@
 /* ************************************************************************** */
 #include "../includes/Data.hpp"
 
-Data::Data(void) {
+Data::Data(std::string name, int age, float grade, bool isAwake) :
+    _name(name), _age(age), _grade(grade), _isAwake(isAwake) {
     return;
-}
+};
 
-Data::Data(const Data &src) {
-    (void)src;
-    return;
+std::ostream &operator<<(std::ostream &out, const Data &data) {
+  out << "Name: " << data._name << std::endl;
+  out << "Age: " << data._age << std::endl;
+  out << "Grade: " << data._grade << std::endl;
+  out << "Is awake: " << data._isAwake << std::endl;
+  return out;
 }
-
-Data& Data::operator=(Data const &src)  {
-    (void)src;
-    return (*this);
-}
-
-Data::~Data() {
-    return;
-}
-

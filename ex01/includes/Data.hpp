@@ -12,23 +12,19 @@
 
 #ifndef EX01_INCLUDES_DATA_HPP_
 #define EX01_INCLUDES_DATA_HPP_
-# include <iostream>
 # include <string>
-# include <climits>
-# include <limits>
-# include <cerrno>
-# include <cstdlib>
-# include <iomanip>
+# include <iostream>
 # include "../includes/Colors.hpp"
 
-class Data {
- public:
+struct Data {
+  std::string _name;
+  int         _age;
+  float       _grade;
+  bool        _isAwake;
 
- private:
-  Data(void);
-  Data(const Data &src);
-  Data &operator=(const Data &src);
-  ~Data(void);
+  Data(std::string name, int age, float grade, bool isAwake);
 };
+
+std::ostream &operator<<(std::ostream &out, const Data &data);
 
 #endif  //  EX01_INCLUDES_DATA_HPP_
