@@ -51,9 +51,6 @@ class ScalarConverter {
     size_t    floatPrecision;
     Scalar(void);
   };
-    class InvalidInputException : public std::exception {
-      virtual const char* what() const throw();
-    };
 
  private:
   ScalarConverter(void);
