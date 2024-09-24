@@ -1,7 +1,7 @@
 /* Copyright 2024 <mbernard>************************************************* */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ScalarConverter.cpp                                     :+:      :+:    :+:   */
+/*   ScalarConverter.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbernard <mbernard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -41,8 +41,8 @@ ScalarConverter::Scalar::Scalar(void) {
     this->floatPrecision = 1;
 }
 
-void	ScalarConverter::convert( std::string const& str ) {
-    ScalarConverter 		tmp;
+void    ScalarConverter::convert(std::string const& str) {
+    ScalarConverter         tmp;
     ScalarConverter::Scalar scalar;
 
     scalar.type = tmp.identifyType(str, scalar);
@@ -52,10 +52,11 @@ void	ScalarConverter::convert( std::string const& str ) {
         tmp.convertToFloat(scalar);
         tmp.convertToDouble(scalar);
     }
-	std::cout << scalar << std::endl;
+    std::cout << scalar << std::endl;
 }
 
-ScalarConverter::inputType ScalarConverter::identifyType(std::string const &str, ScalarConverter::Scalar &scalar) {
+ScalarConverter::inputType ScalarConverter::identifyType(std::string const &str,
+                                                         Scalar &scalar) {
     if (ScalarConverter::isChar(str, scalar))
         return (CHAR);
     if (ScalarConverter::isInt(str, scalar))
@@ -87,7 +88,7 @@ bool    ScalarConverter::isInt(std::string const &str, Scalar &scalar) {
     errno = 0;
     char *end;
 
-    long num = std::strtol(str.c_str(), &end, 10);
+    int64_t num = std::strtol(str.c_str(), &end, 10);
     if (*end != '\0' || errno == ERANGE || num > INT_MAX || num < INT_MIN)
         return (false);
     scalar.intVal = static_cast<int>(num);
@@ -115,8 +116,10 @@ bool    ScalarConverter::isFloat(std::string const &str, Scalar &scalar) {
         scalar.doubleVal = -INF_DOUBLE;
         return (true);
     }
+    if (str.find(".") == std::string::npos)
+        return (false);
     float num = std::strtof(str.c_str(), &end);
-    if ((*(end) != '\0' && (*(end) != 'f' || *(++end)))
+    if (*(end) == '\0'|| *(end) != 'f' || *(++end)
         || errno == ERANGE || num > FLOAT_MAX || num < -FLOAT_MAX)
         return (false);
     scalar.floatVal = num;
@@ -127,6 +130,8 @@ bool    ScalarConverter::isFloat(std::string const &str, Scalar &scalar) {
 bool    ScalarConverter::isDouble(std::string const &str, Scalar &scalar) {
     errno = 0;
     char *end;
+    if (str.find(".") == std::string::npos)
+        return (false);
     double num = std::strtod(str.c_str(), &end);
     if (*end != '\0' || errno == ERANGE
         || num > std::numeric_limits<double>::max()
@@ -138,6 +143,7 @@ bool    ScalarConverter::isDouble(std::string const &str, Scalar &scalar) {
     } else if (scalar.doubleVal < -FLOAT_MAX) {
         scalar.floatVal = -INFF;
     }
+    scalar.floatPrecision = str.length() - str.find('.') - 1;
     return (true);
 }
 
@@ -164,7 +170,7 @@ void   ScalarConverter::checkIfIntIsPossible(Scalar &scalar) {
     }
 }
 
-void		ScalarConverter::convertToInt(Scalar &scalar) {
+void    ScalarConverter::convertToInt(Scalar &scalar) {
     if (scalar.type == INT)
         return;
     checkIfIntIsPossible(scalar);
@@ -196,7 +202,9 @@ void		ScalarConverter::convertToInt(Scalar &scalar) {
 void    ScalarConverter::convertToChar(Scalar &scalar) {
     if (scalar.type == CHAR)
         return;
-    if (!scalar.intPossible || scalar.intVal < CHAR_MIN || scalar.intVal > CHAR_MAX) {
+    if (!scalar.intPossible
+        || scalar.intVal < CHAR_MIN
+        || scalar.intVal > CHAR_MAX) {
         scalar.charPossible = false;
         return;
     }
@@ -217,7 +225,7 @@ void    ScalarConverter::convertToChar(Scalar &scalar) {
     scalar.charDisplayable = std::isprint(scalar.charVal);
 }
 
-void ScalarConverter::convertToFloat(Scalar &scalar) {
+void     ScalarConverter::convertToFloat(Scalar &scalar) {
     if (scalar.type == FLOAT)
         return;
     if ((scalar.doubleVal == NAN_DOUBLE
@@ -246,7 +254,7 @@ void ScalarConverter::convertToFloat(Scalar &scalar) {
     }
 }
 
-void		ScalarConverter::convertToDouble(Scalar &scalar) {
+void    ScalarConverter::convertToDouble(Scalar &scalar) {
     switch (scalar.type) {
         case CHAR:
             scalar.doubleVal = static_cast<double>(scalar.charVal);
@@ -289,58 +297,3 @@ std::ostream &operator<<(std::ostream &os, ScalarConverter::Scalar const &sc) {
     os << std::fixed << std::setprecision(sc.floatPrecision) << sc.doubleVal;
     return (os);
 }
-/*Handling conversions between different scalar types in C++ can be tricky due to potential issues like data loss, overflow, and type safety. Here are some best practices to follow:
-
-1. **Use Explicit Conversions**: Avoid implicit conversions that can lead to unexpected results. Use explicit casting to make conversions clear and intentional.
-    ```cpp
-    int intValue = static_cast<int>(doubleValue);
-    ```
-
-2. **Check for Overflows and Underflows**: Before performing a conversion, ensure that the value is within the range of the target type to prevent overflow or underflow.
-    ```cpp
-    if (doubleValue >= INT_MIN && doubleValue <= INT_MAX) {
-        int intValue = static_cast<int>(doubleValue);
-    } else {
-        // Handle overflow/underflow
-    }
-    ```
-
-3. **Handle Special Floating-Point Values**: Be aware of special floating-point values like NaN (Not a Number) and infinity, and handle them appropriately.
-    ```cpp
-    if (std::isnan(floatValue) || std::isinf(floatValue)) {
-        // Handle special cases
-    } else {
-        int intValue = static_cast<int>(floatValue);
-    }
-    ```
-
-4. **Use Standard Library Functions**: Utilize functions from the standard library for conversions, as they are well-tested and handle many edge cases.
-    ```cpp
-    double doubleValue = std::stod(stringValue);
-    ```
-
-5. **Validate Input**: Always validate input before performing conversions to ensure it is in the expected format and range.
-    ```cpp
-    if (std::isdigit(stringValue[0])) {
-        int intValue = std::stoi(stringValue);
-    } else {
-        // Handle invalid input
-    }
-    ```
-
-6. **Use Exception Handling**: Use exceptions to handle errors during conversions, such as invalid input or out-of-range values.
-    ```cpp
-    try {
-        int intValue = std::stoi(stringValue);
-    } catch (const std::invalid_argument& e) {
-        // Handle invalid argument
-    } catch (const std::out_of_range& e) {
-        // Handle out of range
-    }
-    ```
-
-7. **Document Conversion Logic**: Clearly document the conversion logic, including any assumptions and edge cases, to make the code easier to understand and maintain.
-
-8. **Test Thoroughly**: Write comprehensive tests to cover all possible conversion scenarios, including edge cases and invalid inputs.
-
-By following these best practices, you can ensure that scalar type conversions in your C++ code are safe, reliable, and maintainable.*/
