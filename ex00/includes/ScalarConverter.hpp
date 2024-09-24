@@ -19,7 +19,6 @@
 # include <cerrno>
 # include <cstdlib>
 # include <iomanip>
-# include <cctype>
 # include "../includes/Colors.hpp"
 
 # define NANF std::numeric_limits<float>::quiet_NaN()
