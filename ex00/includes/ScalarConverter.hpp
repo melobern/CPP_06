@@ -69,6 +69,7 @@ class ScalarConverter {
   bool        isInt(std::string const &str, Scalar &scalar);
   bool        isFloat(std::string const &str, Scalar &scalar);
   bool        isDouble(std::string const &str, Scalar &scalar);
+  void        checkIfIntIsPossible(Scalar &scalar);
 };
 
 std::ostream &operator<<(std::ostream &os, ScalarConverter::Scalar const &sc);
