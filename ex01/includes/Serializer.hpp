@@ -12,14 +12,7 @@
 
 #ifndef EX01_INCLUDES_SERIALIZER_HPP_
 #define EX01_INCLUDES_SERIALIZER_HPP_
-# include <iostream>
-# include <string>
-# include <climits>
-# include <limits>
-# include <cerrno>
-# include <cstdlib>
-# include <iomanip>
-# include "../includes/Colors.hpp"
+# include <stdint.h>
 # include "../includes/Data.hpp"
 
 class Serializer {
