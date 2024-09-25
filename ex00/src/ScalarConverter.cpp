@@ -100,7 +100,7 @@ bool    ScalarConverter::isFloat(std::string const &str, Scalar &scalar) {
     errno = 0;
     char *end;
 
-    if (str == "nanf") {
+    if (str == "nanf" || str == "nan") {
         scalar.floatVal = NANF;
         scalar.doubleVal = NAN_DOUBLE;
         return (true);
