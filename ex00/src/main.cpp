@@ -28,6 +28,7 @@ int main(int ac, char **av) {
     check_args(ac);
     for (int i = 1; i < ac; i++) {
         ScalarConverter::convert(av[i]);
+        std::cout << BLUE << "--------------------------" << RESET <<std::endl;
     }
     return (0);
 }
