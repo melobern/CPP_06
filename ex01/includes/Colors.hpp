@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef _COLORS_HPP_
-#define _COLORS_HPP_
+#ifndef EX01_INCLUDES_COLORS_HPP_
+#define EX01_INCLUDES_COLORS_HPP_
 
 #define RED "\033[31m"
 #define GREEN "\033[0;32m"
@@ -22,4 +22,4 @@
 #define BLUE "\033[94m"
 #define RESET "\033[0m"
 
-#endif  //  _COLORS_HPP_
+#endif  //  EX01_INCLUDES_COLORS_HPP_

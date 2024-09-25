@@ -14,12 +14,14 @@
 Data::Data(std::string name, int age, float grade, bool isAwake) :
     _name(name), _age(age), _grade(grade), _isAwake(isAwake) {
     return;
-};
+}
 
 std::ostream &operator<<(std::ostream &out, const Data &data) {
-  out << "Name: " << data._name << std::endl;
-  out << "Age: " << data._age << std::endl;
-  out << "Grade: " << data._grade << std::endl;
-  out << "Is awake: " << data._isAwake << std::endl;
+  const std::string awaken = data._isAwake ? GREEN"true" : RED"false";
+
+  out << YELLOW << "Name:\t\t" << RESET << data._name  << std::endl;
+  out << BLUE << "Age:\t\t" << RESET << data._age << std::endl;
+  out << MAGENTA << "Grade:\t\t" << RESET << data._grade << std::endl;
+  out << CYAN << "Is awake:\t" << RESET << awaken << RESET << std::endl;
   return out;
 }
