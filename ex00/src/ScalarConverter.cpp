@@ -154,14 +154,16 @@ void   ScalarConverter::checkIfIntIsPossible(Scalar &scalar) {
             scalar.intPossible = true;
             break;
         case FLOAT:
-            if (scalar.floatVal == scalar.floatVal &&
-                scalar.floatVal <= INT_MAX && scalar.floatVal >= INT_MIN) {
+            if (scalar.floatVal == scalar.floatVal
+                && scalar.floatVal <= FLOAT_INT_MAX
+                && scalar.floatVal >= FLOAT_INT_MIN) {
                 scalar.intPossible = true;
             }
             break;
         case DOUBLE:
-            if (scalar.doubleVal == scalar.doubleVal &&
-                scalar.doubleVal <= INT_MAX && scalar.doubleVal >= INT_MIN) {
+            if (scalar.doubleVal == scalar.doubleVal
+                && scalar.doubleVal <= FLOAT_INT_MAX
+                && scalar.doubleVal >= FLOAT_INT_MIN) {
                 scalar.intPossible = true;
             }
             break;
