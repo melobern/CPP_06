@@ -162,8 +162,8 @@ void   ScalarConverter::checkIfIntIsPossible(Scalar &scalar) {
             break;
         case DOUBLE:
             if (scalar.doubleVal == scalar.doubleVal
-                && scalar.doubleVal <= FLOAT_INT_MAX
-                && scalar.doubleVal >= FLOAT_INT_MIN) {
+                && scalar.doubleVal <= INT_MAX
+                && scalar.doubleVal >= INT_MIN) {
                 scalar.intPossible = true;
             }
             break;
@@ -208,6 +208,7 @@ void    ScalarConverter::convertToChar(Scalar &scalar) {
         || scalar.intVal < CHAR_MIN
         || scalar.intVal > CHAR_MAX) {
         scalar.charPossible = false;
+        scalar.charDisplayable = true;
         return;
     }
     scalar.charPossible = true;
