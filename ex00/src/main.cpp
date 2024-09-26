@@ -14,9 +14,10 @@
 #include "../includes/ScalarConverter.hpp"
 #include "../includes/Colors.hpp"
 
-static void check_args(int ac, char **av) {
+static void check_args(int ac) {
   if (ac == 1) {
-    std::cout << RED << "Error : should have one argument at least." << RESET;
+    std::cout << RED << "Error : should have, at least, one argument." << RESET;
+    std::cout << std::endl;
     std::cout << "Correct usage : ./convert [number]";
     std::cout << std::endl;
     exit(1);
@@ -24,10 +25,10 @@ static void check_args(int ac, char **av) {
 }
 
 int main(int ac, char **av) {
-    check_args(ac, av);
+    check_args(ac);
     for (int i = 1; i < ac; i++) {
         ScalarConverter::convert(av[i]);
+        std::cout << BLUE << "--------------------------" << RESET <<std::endl;
     }
     return (0);
 }
-
