@@ -206,6 +206,7 @@ void    ScalarConverter::convertToChar(Scalar &scalar) {
         || scalar.intVal < CHAR_MIN
         || scalar.intVal > CHAR_MAX) {
         scalar.charPossible = false;
+        scalar.charDisplayable = true;
         return;
     }
     scalar.charPossible = true;
