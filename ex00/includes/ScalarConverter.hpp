@@ -26,8 +26,6 @@
 # define NAN_DOUBLE std::numeric_limits<double>::quiet_NaN()
 # define INF_DOUBLE std::numeric_limits<double>::infinity()
 # define FLOAT_MAX std::numeric_limits<float>::max()
-# define FLOAT_INT_MAX 2147483647.0f
-# define FLOAT_INT_MIN -2147483648.0f
 
 class ScalarConverter {
  public:

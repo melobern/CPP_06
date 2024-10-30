@@ -10,9 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EX00_INCLUDES_COLORS_HPP_
-#define EX00_INCLUDES_COLORS_HPP_
-
 #define RED "\033[31m"
 #define GREEN "\033[0;32m"
 #define YELLOW "\033[0;33m"
